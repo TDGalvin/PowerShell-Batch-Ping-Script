@@ -11,7 +11,7 @@ foreach($comp in $complist){
          Write-Host($comp + " ;online")
      }
      else{
-        Write-Host($comp + " ;reachable")
+        Write-Host($comp + " ;unreachable")
      }
      
 }
