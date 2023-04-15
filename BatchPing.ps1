@@ -1,18 +1,10 @@
-﻿$complist = Get-Content .\IPAddresses.txt
-
-Start-Transcript -Path .\BatchPingLog.txt
-
-foreach($comp in $complist){
-    
-    $pingtest = Test-Connection -ComputerName $comp -Quiet -Count 1 -ErrorAction SilentlyContinue
-
-    if($pingtest){
-
-         Write-Host($comp + " ;online")
-     }
-     else{
-        Write-Host($comp + " ;unreachable")
-     }
-     
-}
-Stop-Transcript
+﻿Get-Content .\IPAddresses.txt | ForEach-Object {
+    $obj = "" | Select-Object IPAddress,IPConnectionTest
+    try { 
+        $obj.IPConnectionTest = Test-Connection -ComputerName $_ -Quiet -Count 1
+    } catch { 
+        $obj.IPConnectionTest = 'Unknown Host'
+    }	
+    $obj.IPAddress = $_
+    $obj
+} | Export-Csv -Path BatchPingLog.csv -NoType
